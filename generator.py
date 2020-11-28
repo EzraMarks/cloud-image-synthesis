@@ -1,14 +1,18 @@
 import tensorflow as tf
 
-
 class Generator(tf.keras.Model):
-
     def __init__(self):
+        """
+        The Generator class contains the model architecture for the encoder-decoder
+        network which generates output images from input images.
+        """
         super(Generator, self).__init__()
 
-        initializer = tf.keras.initializers.RandomNormal(stddev=0.02)
-        conv_args = dict(kernel_size=4, strides=2,
-                         padding='same', kernel_initializer=initializer)
+        self.batch_size = 4
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.999)
+
+        kernel_initializer = tf.keras.initializers.RandomNormal(stddev=0.02)
+        conv_args = dict(kernel_size=4, strides=2, padding='same', kernel_initializer=kernel_initializer)
 
         # Encoder Layers:
 
@@ -56,18 +60,24 @@ class Generator(tf.keras.Model):
 
         # Maps to RGB output
         self.conv_rgb = tf.keras.layers.Conv2D(
-            filters=3, kernel_size=1, strides=1, padding='same', kernel_initializer=initializer)
+            filters=3, kernel_size=1, strides=1, padding='same', kernel_initializer=kernel_initializer)
 
-    def call(self, images):
+    def call(self, inputs):
+        """
+        Runs a forward pass on an input batch of images.
+        :param inputs: image masks, shape of (num_inputs, img_height, img_width, 1);
+                       during training, the shape is (batch_size, img_height, img_width, 1)
+        :return: output images, shape of (num_inputs, img_height, img_width, 3);
+                 each output image is a 3-channel (rgb) matrix of floats from 0-1
+        """
         # Encoder Forward Pass:
 
         # C64
-        output = self.encoder_conv_1(images)
-        # Batch norm is not applied to the first layer
+        output = self.encoder_conv_1(inputs)
         output = self.encoder_relu(output)
         # C128
         output = self.encoder_conv_2(output)
-        # Call with training=True (even when testing)
+        # Batch norm should be called with training=True (even when testing)
         output = self.encoder_batch_norm_2(output, training=True)
         output = self.encoder_relu(output)
         # C256
@@ -92,7 +102,6 @@ class Generator(tf.keras.Model):
         output = self.encoder_relu(output)
         # C512  (5)
         output = self.encoder_conv_8(output)
-        # Batch norm is skipped for the bottleneck layer (paper revision)
         output = self.encoder_relu(output)
 
         # Decoder Forward Pass:
@@ -134,3 +143,7 @@ class Generator(tf.keras.Model):
         output = tf.math.tanh(output)
 
         return output
+
+    def loss(self, logits_fake):
+        # NOTE: Borrowed from GANs lab
+        return tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.ones_like(logits_fake), logits=logits_fake))
