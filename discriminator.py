@@ -16,6 +16,7 @@ class Discriminator(tf.keras.Model):
         else:
             self.dimension = 286
 
+        # Arguments to be used for most layers
         kernel_initializer = tf.keras.initializers.RandomNormal(stddev=0.02)
         conv_args = dict(kernel_size=4, strides=2, padding='same', use_bias=False,
                          kernel_initializer=kernel_initializer)
@@ -83,6 +84,11 @@ class Discriminator(tf.keras.Model):
         return output
 
     def loss(self, logits_fake, logits_real):
+        """
+        Calculates discriminator loss for a batch of inputs
+        :param logits_fake: a tensor of size (num_inputs, 1) containing discriminator scores for each fake input
+        :param logits_real: a tensor of size (num_inputs, 1) containing discriminator scores for each real input
+        """
         # NOTE: Borrowed from GANs lab
         loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.zeros_like(logits_fake),
                                                                       logits=logits_fake))
