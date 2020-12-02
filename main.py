@@ -11,6 +11,7 @@ def train(real_images, masks):
     with tf.GradientTape(persistent=True) as tape:
         fake_images = generator(masks)
 
+        # TODO: modify discriminator call to pass one tensor with 4 channels
         logits_real = discriminator(real_images, masks)
         logits_fake = discriminator(fake_images, masks)
 
