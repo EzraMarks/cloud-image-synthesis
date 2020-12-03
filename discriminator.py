@@ -1,20 +1,14 @@
 import tensorflow as tf
 
+
 class Discriminator(tf.keras.Model):
-    def __init__(self, size="16x16"):
+    def __init__(self, dimension=16):
         """
         The Discriminator class contains the model architecture for the classification network which determines whether
         mask, image pairs are real or fabricated
-        :param size: the size of the input images and masks. Must be "16x16" or "286x286"
+        :param size: the width and height of the input images and masks. Must be 16 or 286.
         """
-
-        # Validate and record the input size
-        assert(size == "16x16" or size == "286x286",
-               "Discriminator initializer param size must be \"16x16\" or \"1286x286\"")
-        if self.size == "16x16":
-            self.dimension = 16
-        else:
-            self.dimension = 286
+        assert(dimension == 16 or dimension == 286, "Discriminator initializer param size must be 16 or 286")
 
         # Arguments to be used for most layers
         kernel_initializer = tf.keras.initializers.RandomNormal(stddev=0.02)

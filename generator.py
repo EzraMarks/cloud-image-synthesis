@@ -8,6 +8,7 @@ class Generator(tf.keras.Model):
         """
         super(Generator, self).__init__()
 
+        # TODO: Does it really make sense to define batch_size in the models given that they'll have the same batches
         self.batch_size = 4
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.999)
 
