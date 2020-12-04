@@ -5,12 +5,6 @@ from discriminator import Discriminator
 from preprocess import get_data
 import math
 
-
-# TODO: This is a somewhat generic train function (adapted from GANs lab) which should be altered.
-#       It's not currently taking a different number of steps for the generator and
-#       the discriminator.
-
-
 def train(real_images, masks, generator, discriminator, optimizer):
     """
     Executes one training step on a batch of inputs
@@ -46,8 +40,8 @@ def train(real_images, masks, generator, discriminator, optimizer):
 def main():
     # Define constants
     output_width_and_height = 256
-    batch_size = 5
-    num_epochs = 100
+    batch_size = 2
+    num_epochs = 10
 
     # Read in training data
     ground_truth_images, masks = get_data("../swimseg/images", "../swimseg/GTmaps", dimension=output_width_and_height)
