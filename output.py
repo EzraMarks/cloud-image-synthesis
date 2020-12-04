@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import time
 
 
 def save_images(generator_output, output_directory):
@@ -10,7 +11,11 @@ def save_images(generator_output, output_directory):
     """
 
     # For each cloud array convert to png and save
-    for cloud_num in len(generator_output):
-        image = Image.fromarray(generator_output[cloud_num])
-        file_name = "{}/cloud{}".format(output_directory, cloud_num)
+    for cloud_num in range(len(generator_output)):
+        image = generator_output[cloud_num].numpy() * 255
+        image = image.astype(np.uint8)
+        image = Image.fromarray(image)
+        image = image.convert("RGB")
+        timestamp = time.strftime("%H-%M-%S", time.localtime())
+        file_name = "{}/cloud-{}-{}.png".format(output_directory, timestamp, cloud_num)
         image.save(file_name, "PNG")

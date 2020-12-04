@@ -7,11 +7,7 @@ class Generator(tf.keras.Model):
         network which generates output images from input images.
         """
         super(Generator, self).__init__()
-
-        # TODO: Does it really make sense to define batch_size in the models given that they'll have the same batches
-        self.batch_size = 4
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.999)
-
+    
         kernel_initializer = tf.keras.initializers.RandomNormal(stddev=0.02)
         conv_args = dict(kernel_size=4, strides=2, padding='same', kernel_initializer=kernel_initializer)
 
@@ -53,6 +49,8 @@ class Generator(tf.keras.Model):
         self.decoder_batch_norm_6 = tf.keras.layers.BatchNormalization()
         self.decoder_deconv_7 = tf.keras.layers.Conv2DTranspose(filters=64, **conv_args)
         self.decoder_batch_norm_7 = tf.keras.layers.BatchNormalization()
+        self.decoder_deconv_8 = tf.keras.layers.Conv2DTranspose(filters=64, **conv_args)
+        self.decoder_batch_norm_8 = tf.keras.layers.BatchNormalization()
 
         # These layers have no trainable params; they can be reused multiple times
         self.decoder_relu = tf.keras.layers.ReLU()
@@ -137,6 +135,10 @@ class Generator(tf.keras.Model):
         # C64
         output = self.decoder_deconv_7(output)
         output = self.decoder_batch_norm_7(output, training=True)
+        output = self.decoder_relu(output)
+        
+        output = self.decoder_deconv_8(output)
+        output = self.decoder_batch_norm_8(output, training=True)
         output = self.decoder_relu(output)
 
         # Maps to RGB output
