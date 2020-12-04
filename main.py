@@ -46,7 +46,7 @@ def train(real_images, masks, generator, discriminator, optimizer):
 def main():
     # Define constants
     output_width_and_height = 256
-    batch_size = 10
+    batch_size = 5
     num_epochs = 100
 
     # Read in training data
