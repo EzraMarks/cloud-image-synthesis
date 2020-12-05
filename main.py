@@ -35,13 +35,13 @@ def train(real_images, masks, generator, discriminator):
     g_gradients = tape.gradient(g_loss, generator.trainable_variables)
     generator.optimizer.apply_gradients(zip(g_gradients, generator.trainable_variables))
 
-    save_images(fake_images[0:2], "../results")
+    save_images(fake_images[0:1], "../results")
 
 
 def main():
     # Define constants
     output_width_and_height = 256
-    batch_size = 2
+    batch_size = 4
     num_epochs = 1
 
     # Initialize preprocess and the models
