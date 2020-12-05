@@ -13,6 +13,9 @@ class Discriminator(tf.keras.Model):
         assert dimension == 16 or dimension == 256, "Discriminator initializer param size must be 16 or 256"
         self.dimension = dimension
 
+        # Initialize optimizer
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.999)
+
         # Arguments to be used for most layers
         kernel_initializer = tf.keras.initializers.RandomNormal(stddev=0.02)
         conv_args = dict(kernel_size=4, strides=2, padding='same', use_bias=False,
