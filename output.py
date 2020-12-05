@@ -5,7 +5,7 @@ import time
 
 def save_images(generator_output, output_directory):
     """
-    :param generator_output: a Numpy array of shape (num_inputs, 16, 16, 3) representing
+    :param generator_output: a Tensor of shape (num_inputs, 16, 16, 3) representing
     (num_inputs, width, height, num_channels)
     :param output_directory: the filepath to the directory where outputs will be saved
     """

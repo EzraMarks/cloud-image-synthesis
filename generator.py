@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 class Generator(tf.keras.Model):
     def __init__(self):
         """
@@ -7,7 +8,10 @@ class Generator(tf.keras.Model):
         network which generates output images from input images.
         """
         super(Generator, self).__init__()
-    
+
+        # Initialize optimizer
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5, beta_2=0.999)
+
         kernel_initializer = tf.keras.initializers.RandomNormal(stddev=0.02)
         conv_args = dict(kernel_size=4, strides=2, padding='same', kernel_initializer=kernel_initializer)
 
