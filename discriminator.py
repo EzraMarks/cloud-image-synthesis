@@ -90,8 +90,6 @@ class Discriminator(tf.keras.Model):
         :param logits_real: a tensor of size (num_inputs, 1) containing discriminator scores for each real input
         """
         # NOTE: Borrowed from GANs lab
-        loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.zeros_like(logits_fake),
-                                                                      logits=logits_fake))
-        loss += tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.ones_like(logits_real),
-                                                                       logits=logits_real))
+        loss = tf.reduce_mean(tf.keras.losses.binary_crossentropy(tf.zeros_like(logits_fake), logits_fake))
+        loss += tf.reduce_mean(tf.keras.losses.binary_crossentropy(tf.ones_like(logits_real), logits_real))
         return loss

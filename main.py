@@ -29,6 +29,12 @@ def train(real_images, masks, generator, discriminator):
         d_loss = discriminator.loss(logits_fake, logits_real) / 2
         g_loss = generator.loss(logits_fake)
 
+        print("Real logits: ", logits_real[0])
+        print("Fake logits: ", logits_fake[0])
+
+        print("Discriminator loss is ", d_loss.numpy())
+        print("Generator loss is ", g_loss.numpy())
+
     d_gradients = tape.gradient(d_loss, discriminator.trainable_variables)
     discriminator.optimizer.apply_gradients(zip(d_gradients, discriminator.trainable_variables))
 
@@ -42,7 +48,7 @@ def train(real_images, masks, generator, discriminator):
 def main():
     # Define constants
     output_width_and_height = 256
-    batch_size = 5
+    batch_size = 3
     num_epochs = 200
 
     # Initialize preprocess and the models
