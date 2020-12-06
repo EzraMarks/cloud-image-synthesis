@@ -43,12 +43,18 @@ def main():
     # Define constants
     output_width_and_height = 256
     batch_size = 5
-    num_epochs = 20
+    num_epochs = 200
 
     # Initialize preprocess and the models
     preprocess = Preprocess("../swimseg/images", "../swimseg/GTmaps", batch_size, dimension=output_width_and_height)
     generator = Generator()
     discriminator = Discriminator(dimension=output_width_and_height)
+    # Load model weights from saved checkpoint
+    try:
+        generator.load_weights("./checkpoints/generator")
+        discriminator.load_weights("./checkpoints/discriminator")
+    except:
+        print("WARNING: Failed to load model weights from checkpoint")
 
     # For each epoch train the models on each batch of inputs
     for epoch in range(num_epochs):
@@ -60,6 +66,11 @@ def main():
 
             train(tf.convert_to_tensor(clouds, dtype=tf.float32), tf.convert_to_tensor(masks, dtype=tf.float32),
                   generator, discriminator)
+        
+        # Save the model after every epoch
+        generator.save_weights("./checkpoints/generator")
+        discriminator.save_weights("./checkpoints/discriminator")
+        print("Saved model weights")
 
 
 if __name__ == '__main__':
