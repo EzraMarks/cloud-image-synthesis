@@ -20,10 +20,12 @@ class Preprocess:
         self.cloud_image_paths = []
         for image_path in glob.glob(clouds_file_path + "/*.png"):
             self.cloud_image_paths.append(image_path)
+        self.cloud_image_paths.sort()
 
         self.mask_image_paths = []
         for image_path in glob.glob(masks_file_path + "/*.png"):
             self.mask_image_paths.append(image_path)
+        self.mask_image_paths.sort()
 
         # Count inputs and assert that there are the same number of clouds as masks
         self.num_inputs = len(self.cloud_image_paths)
