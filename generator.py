@@ -1,6 +1,5 @@
 import tensorflow as tf
 
-
 class Generator(tf.keras.Model):
     def __init__(self):
         """
@@ -166,5 +165,4 @@ class Generator(tf.keras.Model):
         return output
 
     def loss(self, logits_fake):
-        # NOTE: Borrowed from GANs lab
-        return tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=tf.ones_like(logits_fake), logits=logits_fake))
+        return tf.reduce_mean(tf.keras.losses.binary_crossentropy(tf.ones_like(logits_fake), logits_fake))
