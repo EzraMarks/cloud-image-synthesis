@@ -1,21 +1,24 @@
 from PIL import Image
 import numpy as np
-import time
+import os
 
 
-def save_images(generator_output, output_directory):
+def save_images(images, output_directory, file_name):
     """
-    :param generator_output: a Tensor of shape (num_inputs, 16, 16, 3) representing
+    :param images: a Tensor of shape (num_inputs, 16, 16, 3) representing
     (num_inputs, width, height, num_channels)
     :param output_directory: the filepath to the directory where outputs will be saved
+    :param file_name: the name of the output file (without file extensions)
     """
 
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
+
     # For each cloud array convert to png and save
-    for cloud_num in range(len(generator_output)):
-        image = generator_output[cloud_num].numpy() * 255
+    for i in range(len(images)):
+        image = images[i].numpy() * 255
         image = image.astype(np.uint8)
         image = Image.fromarray(image)
         image = image.convert("RGB")
-        timestamp = time.strftime("%H-%M-%S", time.localtime())
-        file_name = "{}/cloud-{}-{}.png".format(output_directory, timestamp, cloud_num)
-        image.save(file_name, "PNG")
+        path = "{}/{}-{}.png".format(output_directory, file_name, i)
+        image.save(path, "PNG")

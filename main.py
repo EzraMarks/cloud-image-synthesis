@@ -1,9 +1,10 @@
 from output import save_images
 import tensorflow as tf
+import numpy as np
 from generator import Generator
 from discriminator import Discriminator
 from preprocess import Preprocess
-import math
+import os
 
 
 def train(real_images, masks, generator, discriminator):
@@ -29,27 +30,20 @@ def train(real_images, masks, generator, discriminator):
         d_loss = discriminator.loss(logits_fake, logits_real) / 2
         g_loss = generator.loss(logits_fake)
 
-        print("Real logits: ", logits_real[0])
-        print("Fake logits: ", logits_fake[0])
-
-        print("Discriminator loss is ", d_loss.numpy())
-        print("Generator loss is ", g_loss.numpy())
-
     d_gradients = tape.gradient(d_loss, discriminator.trainable_variables)
     discriminator.optimizer.apply_gradients(zip(d_gradients, discriminator.trainable_variables))
 
     g_gradients = tape.gradient(g_loss, generator.trainable_variables)
     generator.optimizer.apply_gradients(zip(g_gradients, generator.trainable_variables))
 
-    save_images(fake_images[0:1], "../results")
-    save_images(real_images[0:1], "../results/inputs")
+    return real_images, fake_images, d_loss, g_loss
 
 
 def main():
     # Define constants
     output_width_and_height = 256
-    batch_size = 3
-    num_epochs = 200
+    batch_size = 10
+    num_epochs = 125
 
     # Initialize preprocess and the models
     preprocess = Preprocess("../swimseg/images", "../swimseg/GTmaps", batch_size, dimension=output_width_and_height)
@@ -64,19 +58,39 @@ def main():
 
     # For each epoch train the models on each batch of inputs
     for epoch in range(num_epochs):
+        print("Epoch ", epoch)
         preprocess.inputs_processed = 0
+        real_images = None
+        fake_images = None
+        discriminator_losses = []
+        generator_losses = []
+
         while True:
             clouds, masks = preprocess.get_data()
             if clouds is None or masks is None:
                 break
 
-            train(tf.convert_to_tensor(clouds, dtype=tf.float32), tf.convert_to_tensor(masks, dtype=tf.float32),
-                  generator, discriminator)
+            real_images, fake_images, d_loss, g_loss = train(
+                tf.convert_to_tensor(clouds, dtype=tf.float32),
+                tf.convert_to_tensor(masks, dtype=tf.float32),
+                generator, discriminator)
+
+            discriminator_losses.append(str(np.average(d_loss)))
+            generator_losses.append(str(np.average(g_loss)))
         
         # Save the model after every epoch
-        generator.save_weights("./checkpoints/generator")
-        discriminator.save_weights("./checkpoints/discriminator")
-        print("Saved model weights")
+        generator.save_weights("../checkpoints/generator")
+        discriminator.save_weights("../checkpoints/discriminator")
+        save_images(real_images, "../results/real", "real-0")
+        save_images(fake_images, "../results/fake", "fake-{}".format(epoch))
+        if not os.path.exists("../losses"):
+            os.makedirs("../losses")
+        discriminator_losses_file = open("../losses/discriminator-losses.csv", "a")
+        discriminator_losses_file.write("Epoch {},{}\n".format(epoch, ",".join(discriminator_losses)))
+        discriminator_losses_file.close()
+        generator_losses_file = open("../losses/generator-losses.csv", "a")
+        generator_losses_file.write("Epoch {},{}\n".format(epoch, ",".join(generator_losses)))
+        generator_losses_file.close()
 
 
 if __name__ == '__main__':

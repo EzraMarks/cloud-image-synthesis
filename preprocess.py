@@ -44,7 +44,6 @@ class Preprocess:
         # Read in images, resize them, and them save as NumPy arrays
         clouds = np.empty((self.batch_size, self.dimension, self.dimension, 3))
         for i in range(self.batch_size):
-            print(self.cloud_image_paths[self.inputs_processed + i])
             image = Image.open(self.cloud_image_paths[self.inputs_processed + i])
             image = image.resize((self.dimension, self.dimension))
             clouds[i] = np.asarray(image)
