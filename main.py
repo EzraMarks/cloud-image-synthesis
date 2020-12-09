@@ -38,6 +38,7 @@ def train(real_images, masks, generator, discriminator):
 
     return real_images, fake_images, d_loss, g_loss
 
+
 def test(masks, generator):
     """
     Generates images based on a batch of input masks
@@ -50,6 +51,7 @@ def test(masks, generator):
     generated_images = generator(masks)
 
     return generated_images
+
 
 def training_loop(generator, discriminator, image_size):
     # NOTE: Define constants
@@ -94,6 +96,7 @@ def training_loop(generator, discriminator, image_size):
         generator_losses_file.write("Epoch {},{}\n".format(epoch, ",".join(generator_losses)))
         generator_losses_file.close()
 
+
 def testing_loop(generator, image_size):
     # NOTE: Define constants
     batch_size = 10
@@ -112,6 +115,7 @@ def testing_loop(generator, image_size):
         save_images(real_images, "../results/real", "real-{}".format(batch_num))
         save_images(fake_images, "../results/fake", "fake-{}".format(batch_num))
         batch_num += 1
+
 
 def main():
     # NOTE: Define constants
