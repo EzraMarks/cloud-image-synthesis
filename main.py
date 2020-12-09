@@ -111,6 +111,7 @@ def testing_loop(generator, image_size):
         fake_images = test(tf.convert_to_tensor(masks, dtype=tf.float32), generator)
         save_images(real_images, "../results/real", "real-{}".format(batch_num))
         save_images(fake_images, "../results/fake", "fake-{}".format(batch_num))
+        batch_num += 1
 
 def main():
     # NOTE: Define constants
