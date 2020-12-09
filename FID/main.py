@@ -45,15 +45,14 @@ def main():
     # initialize inception model
     model = InceptionV3(include_top=False, pooling='avg', input_shape=(256, 256, 3))
 
-    for i in range(52):
-        # load ground-truth images
-        real_images = load_images("../../fid-scores/real/real-0-".format(i), image_size)
-        # load generated images
-        fake_images = load_images("../../fid-scores/fake/fake-{}-".format(i), image_size)
+    # load ground-truth images
+    real_images = load_images("../../fid-scores/epoch-10/real/", image_size)
+    # load generated images
+    fake_images = load_images("../../fid-scores/epoch-10/fake/", image_size)
 
-        # calculate fid score
-        fid = calculate_fid(model, real_images, fake_images)
-        print("Epoch {}, FID score: {}".format(i, fid))
+    # calculate fid score
+    fid = calculate_fid(model, real_images, fake_images)
+    print("FID score: {}".format(fid))
 
 
 if __name__ == '__main__':
