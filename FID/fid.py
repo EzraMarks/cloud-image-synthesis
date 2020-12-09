@@ -35,6 +35,7 @@ def load_images(path, image_size):
     images = np.empty((len(image_paths), image_size, image_size, 3))
     for i in range(len(image_paths)):
         image = Image.open(image_paths[i])
+        image = image.resize((image_size, image_size))
         images[i] = np.asarray(image) / np.float32(255.0)
 
     return images
@@ -43,12 +44,12 @@ def main():
     image_size = 256
     
     # initialize inception model
-    model = InceptionV3(include_top=False, pooling='avg', input_shape=(256, 256, 3))
+    model = InceptionV3(include_top=False, pooling='avg', input_shape=(image_size, image_size, 3))
 
     # load ground-truth images
-    real_images = load_images("../../fid-scores/epoch-10/real/", image_size)
+    real_images = load_images("../../testing-results/epoch-10/real/", image_size)
     # load generated images
-    fake_images = load_images("../../fid-scores/epoch-10/fake/", image_size)
+    fake_images = load_images("../../testing-results/epoch-10/fake/", image_size)
 
     # calculate fid score
     fid = calculate_fid(model, real_images, fake_images)
