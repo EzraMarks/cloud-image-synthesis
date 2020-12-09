@@ -1,5 +1,6 @@
 import tensorflow as tf
 
+
 class Generator(tf.keras.Model):
     def __init__(self):
         """
