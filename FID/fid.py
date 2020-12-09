@@ -26,6 +26,7 @@ def calculate_fid(model, real_images, fake_images):
 	fid = sum_squared_difference + np.trace(real_sigma + fake_sigma - 2.0 * covmean)
 	return fid
 
+
 def load_images(path, image_size):
     image_paths = []
     for image_path in glob.glob(path + "*.png"):
@@ -39,6 +40,7 @@ def load_images(path, image_size):
         images[i] = np.asarray(image) / np.float32(255.0)
 
     return images
+
 
 def main():
     image_size = 256

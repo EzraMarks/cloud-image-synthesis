@@ -53,11 +53,7 @@ def test(masks, generator):
     return generated_images
 
 
-def training_loop(generator, discriminator, image_size):
-    # NOTE: Define constants
-    batch_size = 10
-    num_epochs = 25
-
+def training_loop(generator, discriminator, image_size, batch_size, num_epochs):
     preprocess = Preprocess("../swimseg/images", "../swimseg/GTmaps", batch_size, dimension=image_size)
 
     # For each epoch train the models on each batch of inputs
@@ -97,10 +93,7 @@ def training_loop(generator, discriminator, image_size):
         generator_losses_file.close()
 
 
-def testing_loop(generator, image_size):
-    # NOTE: Define constants
-    batch_size = 10
-
+def testing_loop(generator, image_size, batch_size):
     preprocess = Preprocess("../swimseg/images", "../swimseg/GTmaps", batch_size, dimension=image_size)
     preprocess.inputs_processed = 0
     
@@ -119,23 +112,29 @@ def testing_loop(generator, image_size):
 
 def main():
     # NOTE: Define constants
-    image_size = 256   
+    image_size = 256
+    batch_size = 10
+    num_epochs = 100
     is_training = False
-
-    # Initialize the models
-    generator = Generator()
-    discriminator = Discriminator(dimension=image_size)
-    # Load model weights from saved checkpoint
-    try:
-        generator.load_weights("../checkpoints/generator")
-        discriminator.load_weights("../checkpoints/discriminator")
-    except:
-        print("WARNING: Failed to load model weights from checkpoint")
     
     if (is_training):
-        training_loop(generator, discriminator, image_size)
+        generator = Generator()
+        discriminator = Discriminator(dimension=image_size)
+        try:
+            generator.load_weights("../checkpoints/generator")
+            discriminator.load_weights("../checkpoints/discriminator")
+        except:
+            print("WARNING: Failed to load model weights from checkpoint")
+        
+        training_loop(generator, discriminator, image_size, batch_size, num_epochs)
     else:
-        testing_loop(generator, image_size)
+        generator = Generator()
+        try:
+            generator.load_weights("../checkpoints/generator")
+        except:
+            print("WARNING: Failed to load model weights from checkpoint")
+        
+        testing_loop(generator, image_size, batch_size)
 
 
 if __name__ == '__main__':
