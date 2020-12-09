@@ -56,7 +56,7 @@ def training_loop(generator, discriminator, image_size):
     batch_size = 10
     num_epochs = 25
 
-    preprocess = Preprocess("../swimseg/images", "../swimseg/GTmaps", batch_size, dimension=output_width_and_height)
+    preprocess = Preprocess("../swimseg/images", "../swimseg/GTmaps", batch_size, dimension=image_size)
 
     # For each epoch train the models on each batch of inputs
     for epoch in range(num_epochs):
