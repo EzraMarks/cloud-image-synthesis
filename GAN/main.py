@@ -117,23 +117,21 @@ def main():
     num_epochs = 100
     is_training = False
     
+    generator = Generator()
+    try:
+        generator.load_weights("../checkpoints/generator")
+    except:
+        print("WARNING: Failed to load generator weights from checkpoint")
+
     if (is_training):
-        generator = Generator()
         discriminator = Discriminator(dimension=image_size)
         try:
-            generator.load_weights("../checkpoints/generator")
             discriminator.load_weights("../checkpoints/discriminator")
         except:
-            print("WARNING: Failed to load model weights from checkpoint")
+            print("WARNING: Failed to load discriminator weights from checkpoint")
         
         training_loop(generator, discriminator, image_size, batch_size, num_epochs)
     else:
-        generator = Generator()
-        try:
-            generator.load_weights("../checkpoints/generator")
-        except:
-            print("WARNING: Failed to load model weights from checkpoint")
-        
         testing_loop(generator, image_size, batch_size)
 
 
