@@ -43,7 +43,7 @@ def main():
     # Define constants
     output_width_and_height = 256
     batch_size = 10
-    num_epochs = 125
+    num_epochs = 25
 
     # Initialize preprocess and the models
     preprocess = Preprocess("../swimseg/images", "../swimseg/GTmaps", batch_size, dimension=output_width_and_height)
