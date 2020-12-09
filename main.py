@@ -79,8 +79,8 @@ def main():
             generator_losses.append(str(np.average(g_loss)))
         
         # Save the model after every epoch
-        generator.save_weights("../checkpoints/generator")
-        discriminator.save_weights("../checkpoints/discriminator")
+        generator.save_weights("../checkpoints-{}/generator".format(epoch))
+        discriminator.save_weights("../checkpoints-{}/discriminator".format(epoch))
         save_images(real_images, "../results/real", "real-0")
         save_images(fake_images, "../results/fake", "fake-{}".format(epoch))
         if not os.path.exists("../losses"):
