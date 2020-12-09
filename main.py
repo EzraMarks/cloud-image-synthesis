@@ -107,8 +107,9 @@ def testing_loop(generator, image_size):
         if clouds is None or masks is None:
             break
 
+        real_images =  tf.convert_to_tensor(clouds, dtype=tf.float32)
         fake_images = test(tf.convert_to_tensor(masks, dtype=tf.float32), generator)
-        save_images(clouds, "../results/real", "real-{}".format(batch_num))
+        save_images(real_images, "../results/real", "real-{}".format(batch_num))
         save_images(fake_images, "../results/fake", "fake-{}".format(batch_num))
 
 def main():
