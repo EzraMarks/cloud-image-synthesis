@@ -119,14 +119,14 @@ def main():
     
     generator = Generator()
     try:
-        generator.load_weights("../checkpoints/generator")
+        generator.load_weights("../checkpoint-epoch-10/generator")
     except:
         print("WARNING: Failed to load generator weights from checkpoint")
 
     if (is_training):
         discriminator = Discriminator(dimension=image_size)
         try:
-            discriminator.load_weights("../checkpoints/discriminator")
+            discriminator.load_weights("../checkpoint-epoch-10/discriminator")
         except:
             print("WARNING: Failed to load discriminator weights from checkpoint")
         

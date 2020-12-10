@@ -51,8 +51,9 @@ class Preprocess:
             image = Image.open(self.mask_image_paths[self.inputs_processed + i])
             image = image.resize((self.dimension, self.dimension))
             image = np.asarray(image)
-            image = np.mean(image, axis=-1)
-            masks[i] = np.asarray(image)
+            if (len(np.shape(image)) == 3):
+                image = np.mean(image, axis=-1)
+            masks[i] = image
 
         self.inputs_processed += self.batch_size
 
