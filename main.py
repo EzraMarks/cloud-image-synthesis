@@ -1,10 +1,10 @@
 import os
 import tensorflow as tf
 import numpy as np
-from GAN.output import save_images
-from GAN.generator import Generator
-from GAN.discriminator import Discriminator
-from GAN.preprocess import Preprocess
+from output import save_images
+from generator import Generator
+from discriminator import Discriminator
+from preprocess import Preprocess
 
 
 def train(real_images, masks, generator, discriminator):
